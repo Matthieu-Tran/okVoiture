@@ -12,7 +12,7 @@ model Renter {
   namerenter      String? 
   firstnamerenter String?
   emailrenter     String? @unique
-  cars Car[]
+  cars            Car[]
 }
 
 model Car {
@@ -23,6 +23,6 @@ model Car {
   citycar        String?
   priceperdaycar Float?    @db.Real
   photocar       Bytes?
-  renter    Renter    @relation(fields: [userId], references: [idrenter])
-  userId  Int
+  renter         Renter    @relation(fields: [renterId], references: [idrenter])
+  renterId         Int
 }
