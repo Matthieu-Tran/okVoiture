@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Renter {
+  idrenter        Int     @id @default(autoincrement())
+  namerenter      String? 
+  firstnamerenter String?
+  emailrenter     String? @unique
+  cars Car[]
+}
+
+model Car {
+  idcar          Int       @id @default(autoincrement())
+  brandcar       String?
+  modelcar       String?
+  yearcar        DateTime? @db.Date
+  citycar        String?
+  priceperdaycar Float?    @db.Real
+  photocar       Bytes?
+  renter    Renter    @relation(fields: [userId], references: [idrenter])
+  userId  Int
+}
