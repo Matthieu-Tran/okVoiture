@@ -6,6 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.13",
+    "@next/font": "^13.2.3",
     "@prisma/client": "^4.11.0",
     "next": "latest",
     "react": "18.2.0",
