@@ -5,7 +5,6 @@ import AddCarForm from './components/form'
 function Home() {
   return (
     <main>
-      <div>Hello</div>
       <AddCarForm />
     </main>
 
