@@ -7,7 +7,6 @@ import { authOptions } from '../../pages/api/auth/[...nextauth]'
 
 async function Nav() {
   const session = await getServerSession(authOptions)
-  console.log(session)
   return (
     <nav className='flex justify-between bg-gray-custom text-white items-center py-5'>
        <Link href={'/'}>
