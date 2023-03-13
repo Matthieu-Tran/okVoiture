@@ -5,7 +5,7 @@ import AddCarForm from './components/form'
 function Home() {
   return (
     <main>
-      <AddCarForm />
+      
     </main>
 
   )

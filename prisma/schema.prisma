@@ -10,9 +10,9 @@ datasource db {
 model Advert {
   idcar           Int       @id @default(autoincrement())
   nameAdvert      String?
-  namerenter      String?
-  firstnamerenter String?
-  emailrenter     String?   @unique
+  nameRenter      String?
+  firstNameRenter String?
+  emailRenter     String?   
   brandcar        String?
   modelcar        String?
   yearcar         DateTime? @db.Date

@@ -2,11 +2,10 @@ import Link from 'next/link'
 import Login from './Login'
 import Logged from './Logged'
 import React from 'react'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../../pages/api/auth/[...nextauth]'
+import { Session } from 'next-auth'
 
-async function Nav() {
-  const session = await getServerSession(authOptions)
+async function Nav(props: any) {
+  const { session } = props
   return (
     <nav className='flex justify-between bg-gray-custom text-white items-center py-5'>
        <Link href={'/'}>
