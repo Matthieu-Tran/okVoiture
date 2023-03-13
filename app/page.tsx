@@ -1,14 +1,9 @@
-'use client'
-import React from 'react'
-import AddCarForm from './components/form'
+"use client";
+import React from "react";
+import AddCarForm from "./components/form";
 
 function Home() {
-  return (
-    <main>
-      
-    </main>
-
-  )
+  return <main></main>;
 }
 
-export default Home
+export default Home;
