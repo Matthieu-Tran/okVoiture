@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { useState, useEffect } from "react";
 // Allows to mutate something whereas it's creating, deleting or changing data
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ export default function AddCarForm(props: any) {
   const [brandcar, setBrandCar] = useState("");
   const [modelcar, setModelCar] = useState("");
   const [yearcar, setYearCar] = useState("");
+  const [laVille, setLaVille] = useState("");
   const [ville, setVille] = useState<string[]>([]);
   interface Ville {
     nom: string;
@@ -64,6 +65,7 @@ export default function AddCarForm(props: any) {
       firstNameRenter: string;
       descriptionCar: string;
       emailRenter: string;
+      laVille: string;
     }) => {
       const {
         title,
@@ -71,6 +73,7 @@ export default function AddCarForm(props: any) {
         firstNameRenter,
         descriptionCar,
         emailRenter,
+        laVille,
       } = formData;
       await axios.post("/api/cars/addCars", {
         title,
@@ -78,6 +81,7 @@ export default function AddCarForm(props: any) {
         firstNameRenter,
         descriptionCar,
         emailRenter,
+        laVille,
       });
     },
     {
@@ -103,6 +107,7 @@ export default function AddCarForm(props: any) {
       firstNameRenter,
       descriptionCar,
       emailRenter,
+      laVille,
     });
   };
 
@@ -115,9 +120,12 @@ export default function AddCarForm(props: any) {
     ));
   };
 
-  const generateVilleOptions = () => {
-    return ville;
-  };
+  // This function prevent the user from putting negative values
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "-") {
+      event.preventDefault();
+    }
+  }
 
   return (
     <form
@@ -242,6 +250,7 @@ export default function AddCarForm(props: any) {
             className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight"
             id="grid-first-name"
             name="modelCar"
+            disabled={!brandcar}
             onChange={(e) => {
               setModelCar(e.target.value);
             }}
@@ -254,61 +263,84 @@ export default function AddCarForm(props: any) {
           </select>
         </div>
       </div>
-      <div className="w-full md:w-1/2 mx-auto mb-6">
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-          Année
-        </label>
-        <select
-          className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight"
-          id="grid-first-name"
-          name="yearCar"
-          onChange={(e) => setYearCar(e.target.value)}
-          value={yearcar}
-        >
-          <option value="">« Choisissez »</option>
-          <option>2023</option>
-          <option>2022</option>
-          <option>2021</option>
-          <option>2020</option>
-          <option>2019</option>
-          <option>2018</option>
-          <option>2017</option>
-          <option>2016</option>
-          <option>2015</option>
-          <option>2014</option>
-          <option>2013</option>
-          <option>2012</option>
-          <option>2011</option>
-          <option>2010</option>
-          <option>2009</option>
-          <option>2008</option>
-          <option>2007</option>
-          <option>2006</option>
-          <option>2005</option>
-          <option>2004</option>
-          <option>2003</option>
-          <option>2002</option>
-          <option>2001</option>
-          <option>2000</option>
-          <option>1999 ou avant</option>
-        </select>
+      <div className="flex flex-wrap -mx-3 mb-6">
+        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            Année
+          </label>
+          <select
+            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight"
+            id="grid-first-name"
+            name="yearCar"
+            onChange={(e) => setYearCar(e.target.value)}
+            value={yearcar}
+          >
+            <option value="">« Choisissez »</option>
+            <option>2023</option>
+            <option>2022</option>
+            <option>2021</option>
+            <option>2020</option>
+            <option>2019</option>
+            <option>2018</option>
+            <option>2017</option>
+            <option>2016</option>
+            <option>2015</option>
+            <option>2014</option>
+            <option>2013</option>
+            <option>2012</option>
+            <option>2011</option>
+            <option>2010</option>
+            <option>2009</option>
+            <option>2008</option>
+            <option>2007</option>
+            <option>2006</option>
+            <option>2005</option>
+            <option>2004</option>
+            <option>2003</option>
+            <option>2002</option>
+            <option>2001</option>
+            <option>2000</option>
+            <option>1999 ou avant</option>
+          </select>
+        </div>
+        <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            Ville
+          </label>
+          <select
+            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight"
+            id="grid-first-name"
+            name="ville"
+            onChange={(e) => {
+              setLaVille(e.target.value);
+            }}
+            value={laVille}
+          >
+            {ville &&
+              ville.map((ville: string) => (
+                <option key={ville} value={ville}>
+                  {ville}
+                </option>
+              ))}
+          </select>
+        </div>
       </div>
-      <div className="w-full md:w-1/2 mx-auto mb-6">
-        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-          Ville
-        </label>
-        <select
-          className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight"
-          id="grid-first-name"
-          name="ville"
-        >
-          {ville &&
-            ville.map((ville: string) => (
-              <option key={ville} value={ville}>
-                {ville}
-              </option>
-            ))}
-        </select>
+
+      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+        Prix par jour
+      </label>
+      <div className="w-full md:w-1/2 px-3 mb-6 pb-3 mx-auto md:mb-0 flex items-center">
+        <div className="flex-grow">
+          <input
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="grid-price"
+            type="number"
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+        <div className="ml-2">
+          <span className="text-gray-500 sm:text-sm">$</span>
+        </div>
       </div>
 
       <div className="flex items-center justify-between gap">
