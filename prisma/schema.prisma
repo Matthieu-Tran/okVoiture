@@ -8,20 +8,21 @@ datasource db {
 }
 
 model Advert {
-  idcar           Int       @id @default(autoincrement())
+  idcar           Int      @id @default(autoincrement())
   nameAdvert      String?
   nameRenter      String?
   firstNameRenter String?
-  emailRenter     String?   
+  emailRenter     String?
   brandcar        String?
   modelcar        String?
-  yearcar         DateTime? @db.Date
+  yearcar         String?
   citycar         String?
-  priceperdaycar  Float?    @db.Real
+  priceperdaycar  Float?   @db.Real
+  createdAt       DateTime @default(now())
   photocar        Bytes?
   descriptionCar  String?
   userId          String
-  user            User      @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model Account {
