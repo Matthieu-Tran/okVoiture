@@ -17,47 +17,55 @@ export default function AddCarForm(props: any) {
   const [brandcar, setBrandCar] = useState("");
   const [modelcar, setModelCar] = useState("");
   const [yearcar, setYearCar] = useState("");
-  const [laVille, setLaVille] = useState("");
+  const [citycar, setLaVille] = useState("Anaa");
   const [ville, setVille] = useState<string[]>([]);
+  const [priceperdaycar, setPrix] = useState<number>(0);
+
+  //This constant will disable the button while data is being processed
+  const [isDisabled, setIsDisabled] = useState(false);
+
   interface Ville {
     nom: string;
   }
+
+  // This function fetch the geo.api in order to get the city from French Polynesia
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://geo.api.gouv.fr/departements/987/communes"
+      );
+      const data = await response.json();
+      const nomVille = data.map((obj: { nom: string }) => obj.nom);
+      setVille(nomVille);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // This will fetch data everytime the page renders
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://geo.api.gouv.fr/departements/987/communes"
-        );
-        const data = await response.json();
-        const nomVille = data.map((obj: { nom: string }) => obj.nom);
-        setVille(nomVille);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchData();
   }, []);
 
-  const [isDisabled, setIsDisabled] = useState(false);
   interface CarModels {
     [key: string]: string[];
   }
-
+  //This match the car brands to their specific models
   const carModels: CarModels = {
-    Audi: ["A3", "A4", "Q5"],
-    BMW: ["Series 3", "Series 5", "X5"],
-    Citroen: ["C3", "C4 Cactus", "C5 Aircross"],
-    Fiat: ["500", "Tipo", "Panda"],
-    Ford: ["Focus", "Fiesta", "Mustang"],
-    MercedesBenz: ["C-Class", "E-Class", "S-Class"],
-    Opel: ["Corsa", "Astra", "Insignia"],
-    Peugeot: ["208", "308", "3008"],
-    Renault: ["Clio", "Megane", "Kadjar"],
-    Volkswagen: ["Golf", "Passat", "Tiguan"],
+    Audi: ["« Choisissez »", "A3", "A4", "Q5"],
+    BMW: ["« Choisissez »", "Series 3", "Series 5", "X5"],
+    Citroen: ["« Choisissez »", "C3", "C4 Cactus", "C5 Aircross"],
+    Fiat: ["« Choisissez »", "500", "Tipo", "Panda"],
+    Ford: ["« Choisissez »", "Focus", "Fiesta", "Mustang"],
+    MercedesBenz: ["« Choisissez »", "C-Class", "E-Class", "S-Class"],
+    Opel: ["« Choisissez »", "Corsa", "Astra", "Insignia"],
+    Peugeot: ["« Choisissez »", "208", "308", "3008"],
+    Renault: ["« Choisissez »", "Clio", "Megane", "Kadjar"],
+    Volkswagen: ["« Choisissez »", "Golf", "Passat", "Tiguan"],
     // Ajouter d'autres modèles en fonctions des voitures
   };
 
-  // Creating a form
+  // Creating a car with all the differents parameters
   const { mutate } = useMutation(
     async (formData: {
       title: string;
@@ -65,23 +73,23 @@ export default function AddCarForm(props: any) {
       firstNameRenter: string;
       descriptionCar: string;
       emailRenter: string;
-      laVille: string;
+      brandcar: string;
+      modelcar: string;
+      yearcar: string;
+      citycar: string;
+      priceperdaycar: number;
     }) => {
-      const {
-        title,
-        nameRenter,
-        firstNameRenter,
-        descriptionCar,
-        emailRenter,
-        laVille,
-      } = formData;
       await axios.post("/api/cars/addCars", {
         title,
         nameRenter,
         firstNameRenter,
         descriptionCar,
         emailRenter,
-        laVille,
+        brandcar,
+        modelcar,
+        yearcar,
+        citycar,
+        priceperdaycar,
       });
     },
     {
@@ -92,12 +100,22 @@ export default function AddCarForm(props: any) {
         setIsDisabled(false);
       },
       onSuccess: (data) => {
-        toast.success("Your car has been sent");
+        toast.success("Votre annonce a bien été publié");
         setTitle("");
+        setName("");
+        setFirstName("");
+        setDescriptionCar("");
+        setBrandCar("");
+        setModelCar("");
+        setYearCar("");
+        setLaVille("Anaa");
+        setPrix(0);
         setIsDisabled(false);
       },
     }
   );
+
+  //When the user click on the button, then we send a request to the API with all the differents parameters
   const submitCar = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsDisabled(true);
@@ -107,10 +125,15 @@ export default function AddCarForm(props: any) {
       firstNameRenter,
       descriptionCar,
       emailRenter,
-      laVille,
+      brandcar,
+      modelcar,
+      yearcar,
+      citycar,
+      priceperdaycar,
     });
   };
 
+  //This will generate the model options depending on what the user chosed for the car brand
   const generateModelOptions = (): React.ReactNode => {
     const models = carModels[brandcar] || [];
     return models.map((model) => (
@@ -123,6 +146,9 @@ export default function AddCarForm(props: any) {
   // This function prevent the user from putting negative values
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "-") {
+      event.preventDefault();
+    }
+    if (event.key === ".") {
       event.preventDefault();
     }
   }
@@ -236,7 +262,7 @@ export default function AddCarForm(props: any) {
             <option>Ford </option>
             <option>MercedesBenz </option>
             <option>Opel </option>
-            <option>Peugot</option>
+            <option>Peugeot</option>
             <option>Renault </option>
             <option>Volkswagen </option>
             <option>Autre</option>
@@ -314,7 +340,7 @@ export default function AddCarForm(props: any) {
             onChange={(e) => {
               setLaVille(e.target.value);
             }}
-            value={laVille}
+            value={citycar}
           >
             {ville &&
               ville.map((ville: string) => (
@@ -336,13 +362,58 @@ export default function AddCarForm(props: any) {
             id="grid-price"
             type="number"
             onKeyDown={handleKeyDown}
+            onChange={(e) => {
+              // Converting the string to an int
+              const prixFloat = parseFloat(e.target.value);
+              setPrix(prixFloat);
+            }}
+            value={priceperdaycar}
           />
         </div>
         <div className="ml-2">
-          <span className="text-gray-500 sm:text-sm">$</span>
+          <span className="text-gray-500 sm:text-sm">F</span>
         </div>
       </div>
 
+      {/*
+        The image upload functionnality is not yet implemented but it will be in the future
+        It will intergrate Amazon S3 Buckets
+      */}
+      {/* <div>
+        <label className="block text-sm font-medium leading-6 text-gray-900">
+          Photo de la voiture
+        </label>
+        <div className="mt-2 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+          <div className="space-y-1 text-center">
+            <svg
+              className="mx-auto h-12 w-12 text-gray-400"
+              stroke="currentColor"
+              fill="none"
+              viewBox="0 0 48 48"
+              aria-hidden="true"
+            >
+              <path
+                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <div className="flex text-sm text-gray-600">
+              <label className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500">
+                <span>Ajoutez une image</span>
+                <input
+                  id="file-upload"
+                  name="file-upload"
+                  type="file"
+                  className="sr-only"
+                />
+              </label>
+            </div>
+            <p className="text-xs text-gray-500">PNG, JPG, GIF jusqu'à 10MB</p>
+          </div>
+        </div>
+      </div> */}
       <div className="flex items-center justify-between gap">
         <button
           disabled={isDisabled}

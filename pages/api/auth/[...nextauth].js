@@ -14,6 +14,9 @@ export const authOptions = {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  session: {
+    maxAge: 60 * 60, // adding a session limit of 1 hour
+  },
 }
 
 export default NextAuth(authOptions)
