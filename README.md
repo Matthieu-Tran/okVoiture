@@ -14,7 +14,9 @@ npm install
 
 *Base de données et environnements*
 Pour pouvoir visualiser les données que vous créé car je n'ai pas eu le temps de commencer cette user story, vous pouvez vous créer une base de données sur Railway.app : https://railway.app/
-Pour créer la base de donnée faite:
+
+Pour créer la base de donnée faire:
+
 - Start a New Project
 - Empty Project puis cliquer sur Add a Service
 - Database
@@ -28,6 +30,7 @@ Pour créer la base de donnée faite:
 
 *Authentification*
 Pour l'authentification, il va falloir aller sur *https://console.cloud.google.com/*
+
 - Créer un nouveau projet 
 - Puis quand vous aurez créer votre projet, allez dans le menu de navigation et cliquez sur API et services
 - Allez sur Identifiants
